@@ -33,6 +33,7 @@ class CreateUserRequest(BaseModel):
     last_name: str = Field(min_length=3)
     password: str = Field(min_length=3, max_length=200)
     role: str
+    phone_number: str
 
 
 class Token(BaseModel):
@@ -68,7 +69,8 @@ def create_user(user: CreateUserRequest, db: db_dependency):
         last_name=user.last_name,
         hashed_password=bcrypt_context.hash(user.password),  # Hash the password before storing it
         role=user.role,
-        is_active=True
+        is_active=True,
+        phone_number=user.phone_number
     )
     db.add(create_user_model)
     db.commit()
@@ -97,7 +99,11 @@ def create_access_token(username: str, user_id: int, role: str, exprires_delta: 
     # to_encode = {"sub": username, "id": user_id, "exp": datetime.now(timezone.utc) + exprires_delta}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
-# TODO: review what the annotated type is doing here. It seems to be a way to specify the type of the token parameter and also indicate that it should be obtained from the OAuth2PasswordBearer dependency. The Depends function is used to declare a dependency on the OAuth2PasswordBearer instance, which will handle the extraction of the token from the request headers.
+
+# TODO: review what the annotated type is doing here. 
+#  It seems to be a way to specify the type of the token parameter and also indicate that it should be obtained from the 
+#  OAuth2PasswordBearer dependency. The Depends function is used to declare a dependency on the OAuth2PasswordBearer instance,
+#  which will handle the extraction of the token from the request headers.
 def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])

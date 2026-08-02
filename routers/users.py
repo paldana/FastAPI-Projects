@@ -55,3 +55,18 @@ def change_password(user: user_dependency, db: db_dependency, user_verification:
         return {"message": "Password changed successfully."}
     
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with the id {user.get('id')} is not found")
+
+
+@router.put("/update-phone-number", status_code=status.HTTP_204_NO_CONTENT)
+def update_phone_number(user: user_dependency, db: db_dependency, new_phone_number: str):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User Authentication Failed")
+    
+    user_model = db.query(Users).filter(Users.id == user.get("id")).first()
+    if user_model is not None:
+        user_model.phone_number = new_phone_number
+        db.add(user_model)
+        db.commit()
+        return {"message": "Phone number updated successfully."}
+    
+    raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"User with the id {user.get('id')} is not found")
