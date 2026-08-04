@@ -85,18 +85,18 @@ def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     if not user_authenticated:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
 
-    token = create_access_token(username=user_authenticated.username, user_id=user_authenticated.id, role=user_authenticated.role, exprires_delta=timedelta(minutes=20))
+    token = create_access_token(username=user_authenticated.username, user_id=user_authenticated.id, role=user_authenticated.role, expires_delta=timedelta(minutes=20))
 
     return Token(access_token=token, token_type="bearer") 
 
 
-def create_access_token(username: str, user_id: int, role: str, exprires_delta: timedelta = timedelta(minutes=15)):
+def create_access_token(username: str, user_id: int, role: str, expires_delta: timedelta = timedelta(minutes=15)):
     to_encode = {"sub": username, "id": user_id, "role": role}
-    expire = datetime.now(timezone.utc) + exprires_delta
+    expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})
 
     # simpler version of the above code
-    # to_encode = {"sub": username, "id": user_id, "exp": datetime.now(timezone.utc) + exprires_delta}
+    # to_encode = {"sub": username, "id": user_id, "exp": datetime.now(timezone.utc) + expires_delta}
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
 
 
@@ -111,7 +111,7 @@ def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
         user_id: int = payload.get("id")
         user_role: str = payload.get("role")
 
-        if username is None or user_id is None:
+        if username is None or user_id is None or user_role is None:
             raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate credentials")
         return {"username": username, "id": user_id, "role": user_role}
     except JWTError:

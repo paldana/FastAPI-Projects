@@ -1,6 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, DeclarativeBase, declarative_base
 
 ## SQLite3 
 # SQLALCHEMY_DATABASE_URL = 'sqlite:///./todosapp.db'
@@ -10,6 +9,14 @@ from sqlalchemy.ext.declarative import declarative_base
 SQLALCHEMY_DATABASE_URL = 'postgresql://postgres:test1234!@localhost/TodoApplicationDatabase'
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
+# create a sessionmaker for the database
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
-Base = declarative_base()
+# create a base class for the models to inherit from
+
+## Legacy Approach 
+# Base = declarative_base()
+
+## Modern Approach 
+class Base(DeclarativeBase):
+    pass

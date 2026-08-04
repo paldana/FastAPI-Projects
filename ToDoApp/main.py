@@ -7,11 +7,11 @@ app = FastAPI()
 
 Base.metadata.create_all(bind=engine)        # only runs if the db does not exist
 
-@app.get("/healthy")
+@app.get("/health")
 def health_check():
-    return {"status": "Healthy"}
+    return {"message": "Health check passed"}
 
 app.include_router(auth.router)
 app.include_router(todos.router)
 app.include_router(admin.router)
-app.include_router(users.router)
+app.include_router(users.router) 
