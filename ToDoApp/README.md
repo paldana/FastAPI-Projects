@@ -41,6 +41,22 @@ This project is a full backend API for managing personal todos with user authent
 - `test/`  
   Contains pytest tests for authentication, admin, todos, and the main app.
 
+## Architecture overview
+
+```mermaid
+flowchart LR
+    Client[Client / Swagger UI] --> API[FastAPI App]
+    API --> Auth[Auth Router]
+    API --> Todos[Todo Router]
+    API --> Users[User Router]
+    API --> Admin[Admin Router]
+
+    Auth --> DB[(PostgreSQL Database)]
+    Todos --> DB
+    Users --> DB
+    Admin --> DB
+```
+
 ## Local development
 
 Run the app from the parent folder of this project, which is the `fastAPI` directory.
@@ -88,6 +104,21 @@ http://127.0.0.1:8000/redoc
 ```
 
 ## API flow
+
+```mermaid
+sequenceDiagram
+    participant Client
+    participant API as FastAPI App
+    participant Auth as Auth Router
+    participant DB as Database
+
+    Client->>API: Request /auth/token or /todo
+    API->>Auth: Validate credentials / JWT
+    Auth->>DB: Read or write user/todo data
+    DB-->>Auth: Result
+    Auth-->>API: Response
+    API-->>Client: JSON response
+```
 
 1. A client sends a request to the FastAPI app.
 2. The request is routed to the correct router.
