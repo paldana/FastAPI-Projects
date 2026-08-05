@@ -21,6 +21,19 @@ h1, h2, h3, h4, h5, h6 {
   color: red;
 } */
 
+#todoAlert {
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+#todoAlert.fade-in {
+  opacity: 1;
+}
+
+#todoAlert.fade-out {
+  opacity: 0;
+}
+
 
 
 

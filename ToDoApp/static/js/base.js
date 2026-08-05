@@ -55,11 +55,6 @@
 
     // Edit Todo JS
     const editTodoForm = document.getElementById('editTodoForm');
-        });
-    }
-
-    // Edit Todo JS
-    const editTodoForm = document.getElementById('editTodoForm');
     if (editTodoForm) {
         editTodoForm.addEventListener('submit', async function (event) {
         event.preventDefault();
@@ -136,9 +131,7 @@
                 console.error('Error:', error);
                 alert('An error occurred. Please try again.');
             }
-        });
-
-        
+        });        
     }
 
     // Login JS
