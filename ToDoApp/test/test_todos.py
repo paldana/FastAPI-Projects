@@ -9,7 +9,7 @@ app.dependency_overrides[get_current_user] = override_get_current_user
 
 
 def test_read_all_authenticated(test_todo):
-    response = client.get("/todo/")
+    response = client.get("/todos/")
     assert response.status_code == status.HTTP_200_OK
     assert isinstance(response.json(), list)  # Check if the response is a list 
     assert response.json() == [{'title': 'Test Todo', 
@@ -21,7 +21,7 @@ def test_read_all_authenticated(test_todo):
 
 
 def test_read_one_authenticated(test_todo):
-    response = client.get("/todo/1")
+    response = client.get("/todos/1")
     assert response.status_code == status.HTTP_200_OK
     assert isinstance(response.json(), dict)  # Check if the response is a dictionary
     assert response.json() == {'title': 'Test Todo', 
@@ -32,7 +32,7 @@ def test_read_one_authenticated(test_todo):
                                 'id': 1} # Check if the response contains the test todo    
 
 def test_read_one_authenticated_not_found(test_todo):
-    response = client.get("/todo/999")  # Use a non-existent todo_id
+    response = client.get("/todos/999")  # Use a non-existent todo_id
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Todo with the id 999 is not found"}  # Check if the response contains the correct error message
 
@@ -44,7 +44,7 @@ def test_create_todo(test_todo):
         "priority": 2,
         "complete": False
     }
-    response = client.post("/todo/", json=request_data)
+    response = client.post("/todos/", json=request_data)
     assert response.status_code == status.HTTP_201_CREATED
     assert response.json() == {"message": "Todo created successfully."}  # Check if the response contains the correct success message
 
@@ -63,7 +63,7 @@ def test_update_todo(test_todo):
         "priority": 3,
         "complete": True
     }
-    response = client.put("/todo/1", json=request_data)
+    response = client.put("/todos/1", json=request_data)
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     db = TestingSessionLocal()
@@ -80,13 +80,13 @@ def test_update_todo_not_found(test_todo):
         "priority": 3,
         "complete": True
     }
-    response = client.put("/todo/999", json=request_data)  # Use a non-existent todo_id
+    response = client.put("/todos/999", json=request_data)  # Use a non-existent todo_id
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Todo with the id 999 is not found under the current user"}  # Check if the response contains the correct error message
 
 
 def test_delete_todo(test_todo):
-    response = client.delete("/todo/1")
+    response = client.delete("/todos/1")
     assert response.status_code == status.HTTP_204_NO_CONTENT
 
     db = TestingSessionLocal()
@@ -94,6 +94,6 @@ def test_delete_todo(test_todo):
     assert model is None  # Check if the todo has been deleted from the database
 
 def test_delete_todo_not_found(test_todo):
-    response = client.delete("/todo/999")  # Use a non-existent todo_id
+    response = client.delete("/todos/999")  # Use a non-existent todo_id
     assert response.status_code == status.HTTP_404_NOT_FOUND
     assert response.json() == {"detail": "Todo with the id 999 is not found under the current user"}  # Check if the response contains the correct error message
