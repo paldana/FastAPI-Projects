@@ -1,6 +1,6 @@
 # FastAPI Todo App
 
-This project is a full backend API for managing personal todos with user authentication and role-based access. It supports user registration, login, protected todo CRUD, password updates, phone number updates, and admin-level management of users and todos.
+This project is now a full-stack todo application with a FastAPI backend and a browser-based frontend. It supports user registration, login, protected todo CRUD, password updates, phone number updates, and admin-level management of users and todos, all through a polished Jinja templates UI.
 
 ## What the app includes
 
@@ -11,6 +11,10 @@ This project is a full backend API for managing personal todos with user authent
 - Admin-only routes for reading and managing all todos and users
 - A health check endpoint at `/health`
 - SQLAlchemy models backed by PostgreSQL
+- Jinja2 HTML templates for login, registration, todo listing, and todo editing
+- Bootstrap-based UI served from the FastAPI app
+- Client-side JavaScript for login, registration, todo creation, editing, and deletion
+- Token-based authentication using cookies and JWT
 
 ## Main project files
 
@@ -37,6 +41,12 @@ This project is a full backend API for managing personal todos with user authent
 
 - `alembic/`  
   Stores migration configuration and versioned database changes.
+
+- `templates/`  
+  Contains the HTML pages for the app UI, including login, registration, the todo list, and add/edit todo pages.
+
+- `static/`  
+  Holds CSS and JavaScript assets used by the frontend, including the client-side logic for interacting with the API.
 
 - `test/`  
   Contains pytest tests for authentication, admin, todos, and the main app.
@@ -89,15 +99,21 @@ If you prefer to be explicit about the app directory:
 uvicorn ToDoApp.main:app --reload --app-dir .
 ```
 
-### 4. Open the interactive docs
+### 4. Open the app in your browser
 
 Once the server is running, open:
+
+```text
+http://127.0.0.1:8000/
+```
+
+This redirects to the todo page. You can also open the interactive API docs at:
 
 ```text
 http://127.0.0.1:8000/docs
 ```
 
-You can also use:
+and:
 
 ```text
 http://127.0.0.1:8000/redoc
@@ -127,10 +143,20 @@ sequenceDiagram
 
 ## Example workflow
 
+### Through the browser UI
+
+- Open the app at `http://127.0.0.1:8000/`
+- Register a new account from the register page
+- Log in with your credentials
+- Create, edit, and view todos from the todo page
+- Use the navigation to move between login, registration, and todos
+
+### Through the API
+
 - Create a user with `POST /auth/`
 - Log in with `POST /auth/token` to obtain a JWT token
 - Use the token in the `Authorization` header as `Bearer <token>`
-- Create, read, update, or delete todos with the `/todo` endpoints
+- Create, read, update, or delete todos with the `/todos/todo` endpoints
 - Admin users can access `/admin` endpoints to manage all resources
 
 ## Testing
