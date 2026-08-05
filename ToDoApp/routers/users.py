@@ -8,7 +8,6 @@ from ..models import Users
 from ..database import SessionLocal
 from .auth import get_current_user
 
-
 router = APIRouter(
     prefix="/users",
     tags=["users"]
@@ -28,6 +27,7 @@ bcrypt_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 class UserVerification(BaseModel):
     current_password: str = Field(min_length=3, max_length=200)
     new_password: str = Field(min_length=3, max_length=200)
+
 
 @router.get("/", status_code=status.HTTP_200_OK)
 def get_user(user: user_dependency, db: db_dependency):
