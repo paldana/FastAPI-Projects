@@ -79,11 +79,43 @@ On Windows PowerShell:
 .\.fastapi_env\Scripts\Activate.ps1
 ```
 
-### 2. Make sure PostgreSQL is available
+### 2. Set up PostgreSQL and the database tables
 
 The app expects a PostgreSQL database named `TodoApplicationDatabase` on `localhost`.
 
-If needed, create the database first and adjust the connection string in `ToDoApp/database.py`.
+#### Option A: Install PostgreSQL and pgAdmin 4
+
+1. Download PostgreSQL from the official site:
+   - https://www.postgresql.org/download/
+2. Install PostgreSQL and make sure the PostgreSQL server is running.
+3. Download pgAdmin 4 here:
+   - https://www.pgadmin.org/download/
+4. Open pgAdmin 4 and connect to your local PostgreSQL server.
+
+#### Option B: Create the database
+
+1. In pgAdmin 4, right-click `Databases` and choose `Create` -> `Database`.
+2. Name the database `TodoApplicationDatabase`.
+3. Click `Save`.
+
+#### Option C: Run the SQL setup script
+
+1. Open the SQL file at `ToDoApp/PostgreSQL_init_script.sql`.
+2. In pgAdmin 4, right-click the `TodoApplicationDatabase` database and choose `Query Tool`.
+3. Paste the contents of `PostgreSQL_init_script.sql` into the query editor.
+4. Click `Execute` (or press `F5`) to run the script.
+5. The script will create the `users` and `todos` tables.
+
+You can verify the tables by expanding:
+
+```text
+Servers -> PostgreSQL -> Databases -> TodoApplicationDatabase -> Schemas -> public -> Tables
+```
+
+> If you use different PostgreSQL credentials than the defaults in `ToDoApp/database.py`, update the connection string in that file accordingly.
+
+##### Reference
+- Installing PostgreSQL in [Windows](https://www.udemy.com/course/fastapi-the-complete-course/learn/lecture/30831856#overview) | [Mac](https://www.udemy.com/course/fastapi-the-complete-course/learn/lecture/30831862#overview)
 
 ### 3. Start the API
 
@@ -172,3 +204,7 @@ pytest ToDoApp/test -q
 - Passwords are hashed before being stored.
 - JWT tokens are used to protect private routes.
 - Admin access is determined by the `role` field on the user record.
+
+## Reference
+
+- 
