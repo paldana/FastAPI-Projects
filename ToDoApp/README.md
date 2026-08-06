@@ -16,6 +16,19 @@ This project is now a full-stack todo application with a FastAPI backend and a b
 - Client-side JavaScript for login, registration, todo creation, editing, and deletion
 - Token-based authentication using cookies and JWT
 
+## Deployment
+
+[ToDoApp-Deployment Repo](https://github.com/paldana/ToDoApp-Deployment)
+
+The app is currently deployed and available at:
+
+- https://todoapp-deployment-prje.onrender.com/
+
+The production database configuration in `database.py` now uses a Render-hosted PostgreSQL instance, so the app is configured for deployment rather than the earlier local-only setup.
+
+#### Personal Note:
+- Render Dashboard (login using GitHub credentials): [To-Do App - FastAPI](https://dashboard.render.com/project/prj-d9pr11j9ik0c73chel2g)
+
 ## Main project files
 
 - `main.py`  
@@ -71,12 +84,20 @@ flowchart LR
 
 Run the app from the parent folder of this project, which is the `fastAPI` directory.
 
-### 1. Activate your virtual environment
+### 1. Install and activate your virtual environment
+Inside the project's root directory, create a virtual environment (i.e. `.fastapi_env`) and install the Python packages inside the `requirements.txt` file
+```bash
+python -m venv .fastapi_env
+```
 
 On Windows PowerShell:
-
 ```powershell
 .\.fastapi_env\Scripts\Activate.ps1
+```
+
+Install the packages inside the virtual environment
+```bash
+pip install -r requirements.txt
 ```
 
 ### 2. Set up PostgreSQL and the database tables
@@ -112,12 +133,48 @@ You can verify the tables by expanding:
 Servers -> PostgreSQL -> Databases -> TodoApplicationDatabase -> Schemas -> public -> Tables
 ```
 
-> If you use different PostgreSQL credentials than the defaults in `ToDoApp/database.py`, update the connection string in that file accordingly.
+> If you use different PostgreSQL credentials than the defaults in `database.py`, update the connection string in that file accordingly.
+
+### Alternative Local Development Option: SQLite3
+
+Simply use SQLite3 for local development for a much straightforward interfacing. Uncomment the appropriate lines of code in 'database.py' to use whichever database you'd want to interface with:
+
+```Python
+## SQLite3 -- for local development
+SQLALCHEMY_DATABASE_URL = 'sqlite:///./todoapp.db'
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'check_same_thread': False})
+```
 
 ##### Reference
 - Installing PostgreSQL in [Windows](https://www.udemy.com/course/fastapi-the-complete-course/learn/lecture/30831856#overview) | [Mac](https://www.udemy.com/course/fastapi-the-complete-course/learn/lecture/30831862#overview)
 
-### 3. Start the API
+### 3. Setup the Secrets and Passwords
+Create an `.env` file in the project's root directory and add the following with the secret key and database password
+
+``` 
+SECRET_KEY=
+DATABASE_PASSWORD=
+```
+
+There are different ways of generating secret keys via terminal:
+- Using OpenSSL
+```
+openssl rand -hex 32
+```
+
+- Using Python Secrets
+```
+python - <<'PY'
+import secrets
+print(secrets.token_hex(32))
+PY
+```
+Copy the generated secret keys to the SECRET_KEY variable in your `.env` file. 
+
+### Important note
+>Make sure you add the `.env` file in your `.gitignore` so you don't accidentally commit the file to your public GitHub repository!
+
+### 4. Start the API
 
 From the parent folder:
 
@@ -131,7 +188,7 @@ If you prefer to be explicit about the app directory:
 uvicorn ToDoApp.main:app --reload --app-dir .
 ```
 
-### 4. Open the app in your browser
+### 5. Open the app in your browser
 
 Once the server is running, open:
 
@@ -196,7 +253,7 @@ sequenceDiagram
 Run the test suite from the parent folder:
 
 ```bash
-pytest ToDoApp/test -q
+pytest /test -q
 ```
 
 ## Notes
@@ -205,6 +262,6 @@ pytest ToDoApp/test -q
 - JWT tokens are used to protect private routes.
 - Admin access is determined by the `role` field on the user record.
 
-## Reference
+## References
 
-- 
+- https://github.com/paldana/FastAPI-Projects 
